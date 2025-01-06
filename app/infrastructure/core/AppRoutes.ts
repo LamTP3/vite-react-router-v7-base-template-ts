@@ -3,6 +3,7 @@ export class AppRoutes {
     static readonly PUBLIC = class {
       static readonly AUTH = {
         LOGIN: '/login',
+        REGISTER: '/register',
       };
     };
     static readonly PRIVATE = class {
