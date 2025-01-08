@@ -6,11 +6,13 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
-
 import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
-import { MantineProvider } from "@mantine/core";
+import { LoadingOverlay, MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
@@ -25,6 +27,20 @@ export const links: Route.LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
 ];
 
+export function HydrateFallback() {
+  return (
+    <LoadingOverlay
+      visible={true}
+      zIndex={1000}
+      loaderProps={{ type: "bars" }}
+      transitionProps={{
+        duration: 500,
+        timingFunction: "ease",
+      }}
+    />
+  );
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -35,7 +51,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <MantineProvider>{children}</MantineProvider>
+        <QueryClientProvider client={queryClient}>
+          <MantineProvider>{children}</MantineProvider>
+        </QueryClientProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
